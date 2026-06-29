@@ -5,7 +5,7 @@ project(gc
     LANGUAGES C
 )
 
-option(GC_ENABLE_DISPLAYLINK "Allow the aggregate gc target to include the DisplayLink backend when tinyusb_libdlo is available" ON)
+option(GC_ENABLE_DISPLAYLINK "Allow the aggregate gc target to include the DisplayLink backend when tusb_libdlo is available" ON)
 set(GC_DEFAULT_TARGET "AUTO" CACHE STRING "Backend used by the aggregate gc/libgc target: AUTO, CORE, or DISPLAYLINK")
 set_property(CACHE GC_DEFAULT_TARGET PROPERTY STRINGS AUTO CORE DISPLAYLINK)
 
@@ -29,14 +29,14 @@ target_link_libraries(gc_core INTERFACE
 
 add_library(gc::core ALIAS gc_core)
 
-if(GC_ENABLE_DISPLAYLINK AND TARGET tinyusb_libdlo)
+if(GC_ENABLE_DISPLAYLINK AND TARGET tusb_libdlo)
     add_library(gc_dlo INTERFACE)
     target_sources(gc_dlo INTERFACE
         "${CMAKE_CURRENT_LIST_DIR}/src/gcdlo.c"
     )
     target_link_libraries(gc_dlo INTERFACE
         gc_core
-        tinyusb_libdlo
+        tusb_libdlo
     )
 
     add_library(gc::displaylink ALIAS gc_dlo)
@@ -51,7 +51,7 @@ endif()
 set(GC_AGGREGATE_TARGET gc_core)
 if(GC_DEFAULT_TARGET_UC STREQUAL "DISPLAYLINK")
     if(NOT TARGET gc_dlo)
-        message(FATAL_ERROR "GC_DEFAULT_TARGET=DISPLAYLINK requires GC_ENABLE_DISPLAYLINK=ON and the tinyusb_libdlo target")
+        message(FATAL_ERROR "GC_DEFAULT_TARGET=DISPLAYLINK requires GC_ENABLE_DISPLAYLINK=ON and the tusb_libdlo target")
     endif()
     set(GC_AGGREGATE_TARGET gc_dlo)
 elseif(GC_DEFAULT_TARGET_UC STREQUAL "AUTO" AND TARGET gc_dlo)

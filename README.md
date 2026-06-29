@@ -4,6 +4,6 @@ This library is something I've used over the years for microcontroller and FPGA 
 
 It supports fills, lines, rectangles, circles, flood fill, gradients, blits, stretch blits, transformed blits, alpha/color-key blits, palettes, and color bitmap fonts. The pixel format is flexible and you don't even have to have some color channels (for monochrome/bicolor displays).
 
-The library is built around a GCDEVICE callback table. The same drawing code can draw into system memory or into a device backend. Some backends are included, such as the DisplayLink backend in tinyusb-libdlo.
+The library is built around a GCDEVICE callback table. The same drawing code can draw into system memory or into a device backend. Some backends are included, such as the DisplayLink backend in tusb_libdlo.
 
 This is a spare-time "I needed some bits" graphics library and I make no guarantees. It probably has dragons in it, but PicoGraph uses it so I've open sourced it.
