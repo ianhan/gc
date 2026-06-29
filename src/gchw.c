@@ -256,9 +256,8 @@ void HWDimBuffer(GCBITMAP *pBitmap)
 void HWDrawLine(GCBITMAP *pBitmap,
 				long x,
 				long y,
-				long yMajor,
-				double fxdecInc,
-				long incrementVal,
+				long x2,
+				long y2,
 				GCCOLOR color)
 {
 }
@@ -272,7 +271,7 @@ void GCHWAccelerateContext(GC *pGC)
     pGC->device.HWTransparentBlt = (HWTRANSPARENTBLT)HWTransparentBlt;
     pGC->device.HWConstantAlphaBlend = (HWCONSTANTALPHABLEND)NULL;// HWConstantAlphaBlend;
     pGC->device.HWDimBuffer = (HWDIMBUFFER)HWDimBuffer;
-    pGC->device.HWDrawLine = (HWDIMBUFFER)NULL;//HWDrawLine;
+    pGC->device.HWDrawLine = (HWDRAWLINE)NULL;//HWDrawLine;
     pGC->device.HWFrameBytes = (HWFRAMEBYTES)NULL;
     pGC->device.HWPresentBase = (HWPRESENTBASE)NULL;
 }

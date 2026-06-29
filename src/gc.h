@@ -111,7 +111,7 @@ typedef void (*HWTRANSPARENTBLT)(GCBITMAP *pBitmap,
                                  GCCOLOR colorkey,
                                  GCMATRIX *pMatrix);
 
-typedef void (*HWDRAWLINE)(GCBITMAP *pBitmap, long x, long y, long yMajor, double fxdecInc, long incrementVal, GCCOLOR color);
+typedef void (*HWDRAWLINE)(GCBITMAP *pBitmap, long x, long y, long x2, long y2, GCCOLOR color);
 
 typedef void (*HWBEGINACCESS)(GCBITMAP *pBitmap);
 typedef void (*HWENDACCESS)(GCBITMAP *pBitmap);

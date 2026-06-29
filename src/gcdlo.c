@@ -126,6 +126,64 @@ void DLO_HWSetPixel(GCBITMAP *pBitmap, long x, long y, GCCOLOR color)
     DLO_HWColorFill(pBitmap, x, y, 1, 1, color);
 }
 
+static void DLO_DrawHSpan(GCBITMAP *pBitmap, long y, long x0, long x1, GCCOLOR color)
+{
+    long tmp;
+
+    if (x0 > x1) {
+        tmp = x0;
+        x0 = x1;
+        x1 = tmp;
+    }
+
+    DLO_HWColorFill(pBitmap, x0, y, x1 - x0 + 1, 1, color);
+}
+
+void DLO_HWDrawLine(GCBITMAP *pBitmap, long x, long y, long x2, long y2, GCCOLOR color)
+{
+    long dx = x2 > x ? x2 - x : x - x2;
+    long sx = x < x2 ? 1 : -1;
+    long dy = y2 > y ? y - y2 : y2 - y;
+    long sy = y < y2 ? 1 : -1;
+    long err = dx + dy;
+    long run_y = y;
+    long run_min_x = x;
+    long run_max_x = x;
+    long e2;
+
+    while (GCTRUE) {
+        if (y != run_y) {
+            DLO_DrawHSpan(pBitmap, run_y, run_min_x, run_max_x, color);
+            run_y = y;
+            run_min_x = x;
+            run_max_x = x;
+        } else {
+            if (x < run_min_x) {
+                run_min_x = x;
+            }
+            if (x > run_max_x) {
+                run_max_x = x;
+            }
+        }
+
+        if (x == x2 && y == y2) {
+            break;
+        }
+
+        e2 = 2 * err;
+        if (e2 >= dy) {
+            err += dy;
+            x += sx;
+        }
+        if (e2 <= dx) {
+            err += dx;
+            y += sy;
+        }
+    }
+
+    DLO_DrawHSpan(pBitmap, run_y, run_min_x, run_max_x, color);
+}
+
 GCCOLOR DLO_HWGetPixel(GCBITMAP *pBitmap, long x, long y)
 {
     (void)pBitmap;
@@ -375,7 +433,7 @@ GCBOOL DLO_HWSetupDevice(GCDEVICE *pDevice, GCBITMAP *pDisplaySurface, void *par
     pDevice->HWGetPixel =           (HWGETPIXEL) DLO_HWGetPixel;
     pDevice->HWSetPixel =           (HWSETPIXEL) DLO_HWSetPixel;
     pDevice->HWColorFill =          (HWCOLORFILL)DLO_HWColorFill;
-    pDevice->HWDrawLine =           (HWDRAWLINE) NULL;
+    pDevice->HWDrawLine =           (HWDRAWLINE) DLO_HWDrawLine;
     pDevice->HWCopyBits =           (HWCOPYBITS) DLO_HWCopyBits;
     pDevice->HWConstantAlphaBlend = (HWCONSTANTALPHABLEND)NULL;
     pDevice->HWTransparentBlt =     (HWTRANSPARENTBLT)NULL;

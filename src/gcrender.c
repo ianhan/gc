@@ -353,10 +353,10 @@ void GCPDrawLine(GC *pGC, long x, long y, long x2, long y2, GC* gcpGradient)
         decInc=((double)shortLen/(double)longLen);
 
     if (GCPAccelerate(pGC) &&
-    	pGC->device.HWDrawLine &&
-    	!(pGC->fillMode & GCGRADIENTFG))
+        pGC->device.HWDrawLine &&
+        !(pGC->fillMode & GCGRADIENTFG))
     {
-    	pGC->device.HWDrawLine(pGC->device.hDevice, startx, starty, yMajor, decInc, incrementVal, pGC->foregroundColor);
+        pGC->device.HWDrawLine(pGC->device.hDevice, x, y, x2, y2, pGC->foregroundColor);
     }
     else
     {
