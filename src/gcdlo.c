@@ -452,22 +452,43 @@ GCBOOL DLO_HWSetupDevice(GCDEVICE *pDevice, GCBITMAP *pDisplaySurface, void *par
 
 static GC gcDisplay;
 
-GCBOOL GCDisplayLinkCreate (
+GCBOOL GCDisplayLinkCreateFor(
+    GC *pGC,
     dlo_dev_t uid,
     uint8_t dev_addr)
 {
     (void)dev_addr;
-    return GCInitialize((HWSETUPDEVICE)DLO_HWSetupDevice, uid, &gcDisplay);
+
+    if (!pGC) {
+        return GCFALSE;
+    }
+
+    return GCInitialize((HWSETUPDEVICE)DLO_HWSetupDevice, uid, pGC);
 }
 
-void GCDisplayLinkShutDown (uint8_t dev_addr)
+GCBOOL GCDisplayLinkCreate (
+    dlo_dev_t uid,
+    uint8_t dev_addr)
+{
+    return GCDisplayLinkCreateFor(&gcDisplay, uid, dev_addr);
+}
+
+void GCDisplayLinkShutDownFor(
+    GC *pGC,
+    uint8_t dev_addr)
 {
     (void)dev_addr;
-    GC *pGC = &gcDisplay;
+
+    if (!pGC) {
+        return;
+    }
+
     GCDEVICE* pDevice = &pGC->device;
     GCBITMAP *pDisplaySurface = &pGC->bitmap;
 
-    dlo_release_device(DLO_HANDLE(pDisplaySurface));
+    if (pDisplaySurface->handle) {
+        dlo_release_device(DLO_HANDLE(pDisplaySurface));
+    }
 
     pDevice->HWBeginAccess =        (HWBEGINACCESS)NULL;
     pDevice->HWEndAccess =          (HWENDACCESS)NULL;
@@ -492,6 +513,11 @@ void GCDisplayLinkShutDown (uint8_t dev_addr)
     pDisplaySurface->pGCPalette = NULL;
     pDisplaySurface->pDevice = pDevice;
     pDisplaySurface->entryLevel = 0;
+}
+
+void GCDisplayLinkShutDown (uint8_t dev_addr)
+{
+    GCDisplayLinkShutDownFor(&gcDisplay, dev_addr);
 }
 
 PGC GCDisplay(void)

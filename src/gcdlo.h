@@ -13,7 +13,16 @@ GCBOOL GCDisplayLinkCreate(
     dlo_dev_t uid,
     uint8_t dev_addr);
 
+GCBOOL GCDisplayLinkCreateFor(
+    GC *gc,
+    dlo_dev_t uid,
+    uint8_t dev_addr);
+
 void GCDisplayLinkShutDown(
+    uint8_t dev_addr);
+
+void GCDisplayLinkShutDownFor(
+    GC *gc,
     uint8_t dev_addr);
 
 #ifdef __cplusplus
