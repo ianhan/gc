@@ -415,7 +415,7 @@ GCBOOL DLO_HWSetupDevice(GCDEVICE *pDevice, GCBITMAP *pDisplaySurface, void *par
         return GCFALSE;
     }
 
-    if (pMode->view.bpp != 24) {
+    if (pMode->view.bpp != 24 && pMode->view.bpp != 16) {
         printf("gc: DisplayLink active mode has unsupported bpp %u\n",
                pMode->view.bpp);
         return GCFALSE;
